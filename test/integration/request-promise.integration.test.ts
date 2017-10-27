@@ -38,6 +38,13 @@ describe('Request Promise', async () => {
 
 	});
 
+	it('Capture successful ', async () => {
+
+		const result = await rp.get({uri: 'http://stackoverflow.com', qs: { test: 1 }, resolveWithFullResponse: true});
+		should.exist(result);
+
+	});
+
 	it('Capture Unsuccessful ', async () => {
 
 		try {

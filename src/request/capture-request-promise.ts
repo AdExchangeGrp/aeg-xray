@@ -3,12 +3,25 @@ import * as URL from 'url';
 import RequestDataRequest from './request-data-request';
 import { IncomingMessage } from 'http';
 import { getCause } from '../http/util';
+import * as _ from 'lodash';
 
 export default function captureRequestPromise (module: any, parent: Segment): any {
 
-	const getFunc = (uri: string, options: any = {}, callback: any) => {
+	const getFunc = (uri: any, options: any = {}, callback: any) => {
 
-		const url = URL.parse(uri);
+		let uriResolved: string;
+
+		if (_.isObject(uri)) {
+
+			uriResolved = uri.uri;
+
+		} else {
+
+			uriResolved = uri;
+
+		}
+
+		const url = URL.parse(uriResolved);
 		const host = url.host || 'Unknown host';
 		const subSegment = parent.addSubSegment(host);
 		subSegment.namespace = 'remote';
@@ -22,7 +35,7 @@ export default function captureRequestPromise (module: any, parent: Segment): an
 		options.headers['X-Amzn-Trace-Id'] = 'Root=' + parent.traceId + ';Parent=' + parent.id +
 			';Sampled=' + (parent.isSampled ? '1' : '0');
 
-		const result = module.__get(uri, options, callback);
+		const result = module.__get(uriResolved, _.isObject(uri) ? uri : options, callback);
 
 		subSegment.addIncomingRequestData = new RequestDataRequest(result);
 
