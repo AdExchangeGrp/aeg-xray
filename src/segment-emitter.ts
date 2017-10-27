@@ -2,12 +2,38 @@ import * as dgram from 'dgram';
 import logger from './logger';
 import SegmentBase from './segment-base';
 
-const ADDRESS = '127.0.0.1';
-const PORT = 2000;
 const PROTOCOL_HEADER = '{"format": "json", "version": 1}';
 const PROTOCOL_DELIMITER = '\n';
 
 export class SegmentEmitter {
+
+	private _port: number;
+
+	private _address: string;
+
+	constructor () {
+
+		if (!process.env.AWS_XRAY_DAEMON_ADDRESS) {
+
+			this._port = 2000;
+			this._address = '127.0.0.1';
+
+		} else {
+
+			const parts = process.env.AWS_XRAY_DAEMON_ADDRESS.split(':');
+
+			if (parts.length < 2) {
+
+				throw new Error('AWS_XRAY_DAEMON_ADDRESS invalid: ' + process.env.AWS_XRAY_DAEMON_ADDRESS);
+
+			}
+
+			this._port = Number(parts[1]);
+			this._address = parts[0];
+
+		}
+
+	}
 
 	public send (segment: SegmentBase) {
 
@@ -18,7 +44,7 @@ export class SegmentEmitter {
 			const short = JSON.stringify({trace_id: segment.traceId, id: segment.id});
 			const socket = dgram.createSocket('udp4');
 
-			socket.send(message, 0, message.length, PORT, ADDRESS, (err: any) => {
+			socket.send(message, 0, message.length, this._port, this._address, (err: any) => {
 
 				if (err) {
 

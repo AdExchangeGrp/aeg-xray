@@ -69,6 +69,7 @@
     "@types/lodash": "^4.14.70",
     "@types/request": "^2.0.1",
     "@types/request-promise": "^4.1.36",
+    "continuation-local-storage": "^3.2.0",
     "ip": "^1.1.5",
     "lodash": "^4.17.4",
     "stacktrace-js": "^2.0.0"
