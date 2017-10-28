@@ -1,12 +1,12 @@
 {
-  "name": "@push_innovation/aeg-xray",
+  "name": "@adexchange/aeg-xray",
   "version": "0.0.1",
   "description": "AWS xray sdk",
   "main": "./lib/index.js",
   "author": "Ad Exchange Group",
   "repository": {
     "type": "git",
-    "url": "https://github.com/pushinnovation/aeg-xray.git"
+    "url": "https://github.com/adexchange/aeg-xray.git"
   },
   "license": "UNLICENSED",
   "scripts": {
@@ -63,7 +63,7 @@
     "typescript": "^2.4.1"
   },
   "dependencies": {
-    "@push_innovation/aeg-logger": "0.0.6",
+    "@adexchange/aeg-logger": "^0.0.178",
     "@types/express": "^4.0.36",
     "@types/lodash": "^4.14.70",
     "@types/request": "^2.0.1",

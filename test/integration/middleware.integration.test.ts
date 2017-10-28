@@ -1,7 +1,7 @@
 import * as config from 'config';
 import Segment from '../../src/segment';
 import Logger from '../../src/logger';
-import logger from '@push_innovation/aeg-logger';
+import logger from '@adexchange/aeg-logger';
 import samplingRules from '../../src/sampling-rules';
 import * as path from 'path';
 import server from './server';

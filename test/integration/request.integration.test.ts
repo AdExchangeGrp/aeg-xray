@@ -1,7 +1,7 @@
 import * as should from 'should';
 import * as config from 'config';
 import Logger from '../../src/logger';
-import logger from '@push_innovation/aeg-logger';
+import logger from '@adexchange/aeg-logger';
 import samplingRules from '../../src/sampling-rules';
 import * as path from 'path';
 import captureRequestPromise from '../../src/request/capture-request-promise';
