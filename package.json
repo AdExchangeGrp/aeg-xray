@@ -6,7 +6,7 @@
   "author": "Ad Exchange Group",
   "repository": {
     "type": "git",
-    "url": "https://github.com/adexchange/aeg-xray.git"
+    "url": "https://github.com/AdExchangeGrp/aeg-xray.git"
   },
   "license": "UNLICENSED",
   "scripts": {
