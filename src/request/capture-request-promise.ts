@@ -1,11 +1,10 @@
-import Segment from '../segment';
 import * as URL from 'url';
 import RequestDataRequest from './request-data-request';
 import { IncomingMessage } from 'http';
 import { getCause } from '../http/util';
 import * as _ from 'lodash';
 
-export default function captureRequestPromise (module: any, parent: Segment): any {
+export default function captureRequestPromise (module: any): any {
 
 	const getFunc = (uri: any, options: any = {}, callback: any) => {
 
@@ -13,6 +12,7 @@ export default function captureRequestPromise (module: any, parent: Segment): an
 
 		if (_.isObject(uri)) {
 
+			options = uri;
 			uriResolved = uri.uri;
 
 		} else {
@@ -23,8 +23,6 @@ export default function captureRequestPromise (module: any, parent: Segment): an
 
 		const url = URL.parse(uriResolved);
 		const host = url.host || 'Unknown host';
-		const subSegment = parent.addSubSegment(host);
-		subSegment.namespace = 'remote';
 
 		if (!options.headers) {
 
@@ -32,47 +30,57 @@ export default function captureRequestPromise (module: any, parent: Segment): an
 
 		}
 
-		options.headers['X-Amzn-Trace-Id'] = 'Root=' + parent.traceId + ';Parent=' + parent.id +
-			';Sampled=' + (parent.isSampled ? '1' : '0');
+		if (options.segment) {
 
-		const result = module.__get(uriResolved, _.isObject(uri) ? uri : options, callback);
+			const subSegment = options.segment.addSubSegment(host);
+			subSegment.namespace = 'remote';
+			options.headers['X-Amzn-Trace-Id'] = 'Root=' + options.segment.traceId + ';Parent=' + options.segment.id +
+				';Sampled=' + (options.segment.isSampled ? '1' : '0');
 
-		subSegment.addIncomingRequestData = new RequestDataRequest(result);
+			const result = module.__get(uriResolved, _.isObject(uri) ? uri : options, callback);
 
-		result
-			.on('error', (err) => {
+			subSegment.addIncomingRequestData = new RequestDataRequest(result);
 
-				subSegment.error = true;
-				subSegment.close(err);
+			result
+				.on('error', (err) => {
 
-			})
-			.on('complete', (res: IncomingMessage) => {
+					subSegment.error = true;
+					subSegment.close(err);
 
-				if (res.statusCode === 429) {
+				})
+				.on('complete', (res: IncomingMessage) => {
 
-					subSegment.throttled = true;
+					if (res.statusCode === 429) {
 
-				}
+						subSegment.throttled = true;
 
-				const cause = getCause(Number(res.statusCode || ''));
+					}
 
-				if (cause) {
+					const cause = getCause(Number(res.statusCode || ''));
 
-					subSegment[cause] = true;
+					if (cause) {
 
-				}
+						subSegment[cause] = true;
 
-				if (subSegment.incomingRequestData) {
+					}
 
-					subSegment.incomingRequestData.close(res);
+					if (subSegment.incomingRequestData) {
 
-				}
+						subSegment.incomingRequestData.close(res);
 
-				subSegment.close();
+					}
 
-			});
+					subSegment.close();
 
-		return result;
+				});
+
+			return result;
+
+		} else {
+
+			return module.__get(uriResolved, _.isObject(uri) ? uri : options, callback);
+
+		}
 
 	};
 

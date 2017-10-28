@@ -5,20 +5,8 @@ import logger from './logger';
 import SubSegment from './sub-segment';
 import SegmentBase from './segment-base';
 import sampler, { Sampler } from './sampler';
-import LambdaContext from './lambda/lambda-context';
 
 export default class Segment extends SegmentBase {
-
-	public static fromLambdaContext (options: { emitProgress?: boolean } = {}): Segment {
-
-		const lambda = LambdaContext.segment();
-		const segment = new Segment(lambda.name, options);
-		segment._traceId = lambda.traceId;
-		segment._id = lambda.id;
-		segment._startTime = lambda.start_time;
-		return segment;
-
-	}
 
 	private _subSegments: SubSegment[];
 
@@ -108,7 +96,7 @@ export default class Segment extends SegmentBase {
 
 	}
 
-	private async _flushSubSegments (force: boolean): Promise<void> {
+	protected async _flushSubSegments (force: boolean): Promise<void> {
 
 		const self = this;
 
