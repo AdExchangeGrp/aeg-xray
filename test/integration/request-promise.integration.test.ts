@@ -18,7 +18,7 @@ let segment: Segment | undefined;
 before(async () => {
 
 	segment = new Segment('test-http');
-	rp = captureRequestPromise(require('request-promise'), segment);
+	rp = captureRequestPromise(require('request-promise'));
 
 });
 
@@ -33,14 +33,19 @@ describe('Request Promise', async () => {
 
 	it('Capture successful ', async () => {
 
-		const result = await rp.get('http://stackoverflow.com', {resolveWithFullResponse: true});
+		const result = await rp.get('http://stackoverflow.com', {resolveWithFullResponse: true, segment});
 		should.exist(result);
 
 	});
 
 	it('Capture successful ', async () => {
 
-		const result = await rp.get({uri: 'http://stackoverflow.com', qs: { test: 1 }, resolveWithFullResponse: true});
+		const result = await rp.get({
+			uri: 'http://stackoverflow.com',
+			qs: {test: 1},
+			resolveWithFullResponse: true,
+			segment
+		});
 		should.exist(result);
 
 	});
@@ -49,7 +54,10 @@ describe('Request Promise', async () => {
 
 		try {
 
-			const result = await rp.get('https://security-service-ci.aegcamp.com/v1/oauth/passwordToken?test=1', {resolveWithFullResponse: true});
+			const result = await rp.get('https://security-service-ci.aegcamp.com/v1/oauth/passwordToken?test=1', {
+				resolveWithFullResponse: true,
+				segment
+			});
 			should.not.exist(result);
 
 		} catch (ex) {

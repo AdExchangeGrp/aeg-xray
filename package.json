@@ -3,7 +3,6 @@
   "version": "0.0.1",
   "description": "AWS xray sdk",
   "main": "./lib/index.js",
-  "types": "./lib/index.d.ts",
   "author": "Ad Exchange Group",
   "repository": {
     "type": "git",
@@ -64,7 +63,7 @@
     "typescript": "^2.4.1"
   },
   "dependencies": {
-    "@adexchange/aeg-logger": "0.0.145",
+    "@adexchange/aeg-logger": "^0.0.178",
     "@types/express": "^4.0.36",
     "@types/lodash": "^4.14.70",
     "@types/request": "^2.0.1",

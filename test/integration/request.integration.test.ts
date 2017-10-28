@@ -18,7 +18,7 @@ let segment: Segment | undefined;
 before(async () => {
 
 	segment = new Segment('test-http');
-	rp = captureRequestPromise(require('request'), segment);
+	rp = captureRequestPromise(require('request'));
 
 });
 
@@ -33,7 +33,7 @@ describe('Request', () => {
 
 	it('Capture successful ', (done) => {
 
-		rp.get('http://stackoverflow.com', (err, response) => {
+		rp.get('http://stackoverflow.com', {segment}, (err, response) => {
 
 			should.exist(response);
 			should(response.statusCode).be.equal(200);
@@ -45,7 +45,7 @@ describe('Request', () => {
 
 	it('Capture Unsuccessful ', (done) => {
 
-		rp.get('https://security-service-ci.aegcamp.com/v1/oauth/passwordToken?test=1', (err, response) => {
+		rp.get('https://security-service-ci.aegcamp.com/v1/oauth/passwordToken?test=1', {segment}, (err, response) => {
 
 			should.exist(response);
 			should(response.statusCode).be.equal(405);

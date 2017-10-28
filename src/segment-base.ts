@@ -243,6 +243,36 @@ export default abstract class SegmentBase {
 
 	public close (err?: Error): void {
 
+		this._close(err);
+
+		this.flush().catch(() => {
+
+			// nothing to do
+
+		});
+
+	}
+
+	public async closeAsync (err?: Error): Promise<void> {
+
+		this._close(err);
+
+		try {
+
+			await this.flush();
+
+		} catch (ex) {
+
+			// nothing to do
+
+		}
+
+	}
+
+	public abstract async flush (): Promise<void>;
+
+	private _close (err?: Error) {
+
 		this._closed = true;
 		this._inProgress = false;
 		this._endTime = new Date().getTime() / 1000;
@@ -253,14 +283,6 @@ export default abstract class SegmentBase {
 
 		}
 
-		this.flush().catch(() => {
-
-			// nothing to do
-
-		});
-
 	}
-
-	public abstract async flush (): Promise<void>;
 
 }
