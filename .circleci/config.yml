@@ -34,7 +34,7 @@ jobs:
               git config --global user.name $GIT_USER
               npm version 0.0.$CIRCLE_BUILD_NUM
               git push --tags
-              npm publish
+              npm publish --access public
             fi
 
       - store_artifacts:
