@@ -1,6 +1,6 @@
 {
   "name": "@adexchange/aeg-xray",
-  "version": "0.0.1",
+  "version": "0.0.90",
   "description": "AWS xray sdk",
   "main": "./lib/index.js",
   "author": "Ad Exchange Group",
